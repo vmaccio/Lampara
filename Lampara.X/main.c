@@ -8,6 +8,7 @@
 #pragma config PWRTE = ON, BOR4V = BOR21V, WRT = OFF
 
 #include <xc.h>
+#include "i2c.h"
 
 int sumaEnvioRuido = 0;
 int sumaSampleResto = 0;
@@ -18,6 +19,9 @@ int humedad = 0;
 int resultado = 0;
 int luz = 0;
 int lowByteLuz = 0;
+int lowByteCO2 = 0;
+int CO2 = 0;
+int CO2status = 0;
 
 void init_ADC(){
     PIE1bits.ADIE = 0;
@@ -61,23 +65,10 @@ void sampleResto(){
     humedad = resultado;
     
     //LUZ //adress = 0010000
-    SSPCONbits.SSPM = 0b1000; //activo modo master
-    SSPCONbits.SSPEN = 1; //configura los pines
-    SSPCON2bits.SEN = 1; //start condition
-    SSPBUF = 0b00100001; //direccion de sensor con ultimo bit read
-    while(SSPCON2bits.ACKSTAT != 0); //no avanza hasta recibir ACK
-    SSPCON2bits.RCEN = 1; //modo recepcion de datos
-    while(SSPSTATbits.BF != 1); //espera a llenar el buffer
-    lowByteLuz = SSPBUF; //vacia buffer
-    SSPCON2bits.ACKDT = 0; //configura ACK
-    SSPCON2bits.ACKEN = 1; //envia ACK
-    while(SSPSTATbits.BF != 1); //espera a llenar buffer
-    luz = SSPBUF; //vacia buffer
-    luz = luz << 8; //desplaza high byte a la izquierda
-    luz = luz | lowByteLuz; //añade low byte al resultado
-    SSPCON2bits.ACKDT = 1; //configuracion ACK
-    SSPCON2bits.ACKEN = 1; //envio ACK
-    SSPCON2bits.PEN = 1; //stop condition
+    luz = leerLuz();
+    
+    //CO2
+    CO2 = leerCo2();
 }
 
 void __interrupt()   INT_CONTROLADO(void)
