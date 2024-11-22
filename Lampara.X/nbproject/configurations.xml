@@ -18,8 +18,10 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>main.c</itemPath>
-      <itemPath>i2c.h</itemPath>
-      <itemPath>i2c.c</itemPath>
+      <itemPath>i2c-v2.c</itemPath>
+      <itemPath>i2c-v2.h</itemPath>
+      <itemPath>spi-master-v1.c</itemPath>
+      <itemPath>spi-master-v1.h</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
