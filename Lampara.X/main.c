@@ -118,8 +118,9 @@ void envioResto(){
     printf("%do%do%do%hu%hu", UARTcabecera, UARTlongitudMensaje, UARTcomando, UARTdatosH_T_L_C, UART_CRC);
     
     //UART TEMPERATURA
-    UARTcomando = 99;//no lo se aun porque no esta puesto, besis
-    UARTlongitudMensaje = 99;
+    //@TODO - tengo que traducir 2 bytes de datos a 1 para pode enviarlo siguiendo el protocolo
+    UARTcomando = 6;
+    UARTlongitudMensaje = 1;
     UARTdatosH_T_L_C = temperatura;
     printf("%do%do%do%hu%hu", UARTcabecera, UARTlongitudMensaje, UARTcomando, UARTdatosH_T_L_C, UART_CRC);
 }
