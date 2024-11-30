@@ -196,7 +196,7 @@ void __interrupt()   INT_CONTROLADO(void)
     }
 }
 
-void main(void) {
+void main(void) { //init del PORTA para ponerlos como input
     INTCONbits.GIE = 1;
     init_ADC();
     init_timer0();

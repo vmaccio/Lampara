@@ -20,7 +20,7 @@
  *  correcto.
  */
 
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <xc.h>
 #include <proc/pic16f886.h>
@@ -31,43 +31,63 @@
 
 #define _XTAL_FREQ 20000000  // Frecuencia del oscilador externo: 20 MHz
 
-unsigned short sumaEnvioRuido = 0;
-unsigned short sumaSampleResto = 0;
+unsigned short altoRuido = 0;
+unsigned short resultado = 0;
+unsigned short temperatura = 0;
+unsigned short humedad = 0;
+unsigned short resulADClow, resulADChigh;
 
- 
+void init_PORTA() {
+    TRISAbits.TRISA0 = 1;
+    TRISAbits.TRISA1 = 1;
+    TRISAbits.TRISA2 = 1;
+}
+
+void init_ADC(){
+    PIE1bits.ADIE = 0;
+    ADCON0bits.ADCS = 0b10; //A/D conversion clock
+    ADCON1bits.VCFG0 = 0;
+    ADCON1bits.VCFG1 = 0;
+    ADCON0bits.CHS = 0b00; //Varia
+    ADCON1bits.ADFM = 1;
+    ADCON0bits.ADON = 1;
+}
+
+void sampleTodos(){
+    //************** RUIDO ********************************
+    ADCON0bits.CHS = 0b00;
+    ADCON0bits.GO_nDONE = 1;
+    altoRuido = resultado;
+    
+    //************** TEMPERATURA ********************************
+    ADCON0bits.CHS = 0b01;
+    ADCON0bits.GO_nDONE = 1;
+    temperatura = resultado;
+    
+    //************** HUMEDAD ********************************
+    ADCON0bits.CHS = 0b10;
+    ADCON0bits.GO_nDONE = 1;
+    humedad = resultado;
+}
+
 void __interrupt()   INT_CONTROLADO(void)
 {
-    if (INTCONbits.T0IF == 1){
-        TMR0 = 217;
-        printf("Sample Ruido");
-        sumaEnvioRuido ++;
-        if (sumaEnvioRuido == 100){
-            printf("Envio Ruido");
-            sumaSampleResto ++;
-            sumaEnvioRuido = 0;
-            printf("Reinicio max ruido");
-        }
-        if (sumaSampleResto == 5){
-            printf("Sample Resto");
-            printf("Envio Resto");
-            sumaSampleResto = 0;
-        }
-        INTCONbits.T0IF = 0;
+    if(PIR1bits.ADIF){
+        PIR1bits.ADIF = 0;
+        resulADClow = ADRESL;
+        resulADChigh = ADRESH;
+        resultado = resulADChigh << 8;
+        resultado |= resulADClow;
     }
 }
 
-void init_timer0(){
-    INTCONbits.T0IE = 1;
-    OPTION_REGbits.T0CS = 0;
-    OPTION_REGbits.PSA = 0;
-    OPTION_REGbits.PS = 0b111;
-    TMR0 = 217; //10ms (puede estar mal)
-}
-
 void main(void) {
-    init_timer0();
     INTCONbits.GIE = 1;  // habilita interrupciones de forma general
     INTCONbits.PEIE = 1; // habilita interrupciones de los periféricos
-    while(1);
+    init_ADC();
+    init_PORTA();
+    sampleTodos();
+    printf("Ruido: %hu /Temperatura: %hu /Humedad: %hu", altoRuido, temperatura, humedad);
+    
     return;
-}*/
+}
