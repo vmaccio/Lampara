@@ -4,20 +4,15 @@
  *
  * Created on 27 de noviembre de 2024, 16:05
  * 
- * Objetivo de la prueba : comprobar si timer 0 cumple con las plazos esperados
- *  de interrupcion para recoger y enviar datos
+ * Objetivo de la prueba : comprobar que el ADC funciona correctamente con los
+ *  sensores
  * 
- * Forma de realizarla : mediante la herramienta stopwatch de MPLAB y usando 
- *  breakpoints podemos comprobar el tiempo entre cada parada de ejecucion.
- *  Esto nos permite comprobar cada cuanto interrumpe timer0.
- *  Serian necesarios breakpoint en las lineas 35, 40 y 46. Hay que ejecutarlos
- *  de manera individual para medir bien el tiempo.
+ * Forma de realizarla : una vez conectados los sensores podremos ejecutar este
+ *  programa para comprobar que los datos recibidos se convierten correctamente
+ *  en datos digitales.
  * 
- * Resultado esperado : Para cada breakpoint se espera un tiempo diferente por
- *  por lo tanto para el de la linea 35 el tiempo entre paradas deberia ser 
- *  10ms, para la linea 40 deberia ser 1s y para la linea 46 deberia ser 5s.
- *  Si esto se cumple podemos asegurar que la variable TMR0 esta en el valor
- *  correcto.
+ * Resultado esperado : Se espera que se imprima el valor correcto de lectura
+ *  de cada sensor.
  */
 
 #include <stdio.h>
