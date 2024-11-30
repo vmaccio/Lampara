@@ -76,7 +76,7 @@ void init_timer0(){
     OPTION_REGbits.T0CS = 0;
     OPTION_REGbits.PSA = 0;
     OPTION_REGbits.PS = 0b111;
-    TMR0 = 60; //10ms (puede estar mal)
+    TMR0 = 217; //10ms (puede estar mal)
 }
 
 void sampleRuido(){
@@ -170,7 +170,7 @@ void sampleResto(){
 void __interrupt()   INT_CONTROLADO(void)
 {
     if (INTCONbits.T0IF == 1){
-        TMR0 = 60;
+        TMR0 = 217;
         sampleRuido();
         sumaEnvioRuido ++;
         if (sumaEnvioRuido == 100){
